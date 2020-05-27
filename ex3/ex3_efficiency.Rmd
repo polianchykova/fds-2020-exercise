@@ -1,0 +1,322 @@
+---
+title: "Exercise 3: Efficient data managment"
+author: "Philipp Kling"
+date: "`r Sys.Date()`"
+output:
+  html_document: 
+    code_folding: show
+    fig_height: 6
+    highlight: tango
+    theme: spacelab
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: yes
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+```{r knitr_init, echo=TRUE, cache=FALSE, warning=FALSE}
+library(knitr)
+
+## Global options
+options(max.print="75")
+opts_chunk$set(echo=FALSE,
+	             cache=FALSE,
+               prompt=FALSE,
+               tidy=TRUE,
+               comment=NA,
+               message=FALSE,
+               warning=FALSE)
+opts_knit$set(width=75)
+rm(list = ls())
+```
+
+# Preparation
+## Installation of required packages
+```{r,echo=TRUE}
+# install.packages("dplyr")
+library(dplyr)
+```
+
+# **General overview**
+
+Packages to consider:
+
+ * **apply** function family to apply functios to vectors in a more efficient way than loops. 
+ * **dplyr** package for human readable and efficient data managment.
+ * **vroom** package for fast reading of delimited datasets (e.g. large csv files). See e.g. vignette("vroom") for a description.
+ * **purrr** package for functional programming (similar to apply family). See https://purrr.tidyverse.org/ for more information.
+ * **data.table** package to work with large datasets and have a similar syntax as base R.
+
+# **apply**
+
+Generally: apply a function to an object. This is generally faster than looping over data.
+
+ * __apply__: the base function apply(x, MARGIN, FUN) applies functions to matrices
+     * x is the object
+     * MARGIN is the dimension to which is should be applied (1 represents rows, 2 represents columns)
+     * FUN is the function that should be applied to the object
+  
+* __lapply__: applies a function to a list (or vector and data.frames) and *returns a list*
+    * "[" is a selector operator. lapply(listOfMatrices, "[", 1) selects the first row in each matrix of listOfMatrices, lapply(listOfMatrices, "[", , 1) selects the first column of each matrix in listOfMatrices.
+* __sapply__: works like lapply, but tries to *simplify* the results (can also be achieved most of the time with "unlist(lapply(...))").
+* Others: 
+    * __mapply__: from *multivariate* apply
+    * __tapply__: apply a function to categories defined by a factor variable.
+    * __rapply__: recursively applies a function to a list.
+    * __vapply__: allows the specification of the return format.
+
+
+## Application: calculate means for wordcount and the page number of articles by section
+
+
+```{r,echo=TRUE}
+load("../data/ex3/guardianapi_uknews_combined.Rda")
+```
+
+ 
+```{r,echo=TRUE}
+garticles_split <- split(garticles, garticles$sectionId)
+class(garticles_split) # a list of data.frames. For each section a separate data.frame
+head(names(garticles_split))  # The names of the list items. Each is the name of the sections
+```
+
+### Do it in a for loop with R
+
+```{r,echo=TRUE}
+system.time({
+  res <- list()  # Placeholder for our results
+  for(n in names(garticles_split)){   
+     section_df <- garticles_split[[n]]   # Extract the dataframe representing the section
+     res[[n]] <- data.frame(mean_wordcount=mean(section_df$wordcount, na.rm = TRUE),
+                            mean_pagenumber=mean(section_df$newspaperPageNumber, na.rm = TRUE),
+                            n=nrow(section_df))
+  }
+  res <- do.call(rbind,res)
+  print(head(res))
+})
+```
+
+### Do it with the apply family
+```{r,echo=TRUE}
+system.time({
+  # Define function beforehand
+  get_means <- function(data_frame){
+    r <- data.frame(mean_wordcount = mean(data_frame$wordcount, na.rm = TRUE),
+                    mean_pagenumber = mean(data_frame$newspaperPageNumber, na.rm = TRUE),
+                    n = nrow(data_frame))
+    return(r)
+  }
+  # Apply the function to the splitted data (list of data frames from above)
+  res <- lapply(garticles_split, get_means)
+  # Append the results together
+  res <- do.call(rbind, res)
+  print(head(res))
+})
+```
+
+
+# **dplyr**
+
+ * very fast in comparison to base R
+ * uses verbose language that makes code human readable
+ 
+ **Base functions**
+
+ * **filter()** to select cases based on their values.
+ * **arrange()** to reorder the cases.
+ * **select()** and **rename()** to select variables based on their names.
+ * **mutate()** and **transmute()** to add new variables that are functions of existing variables.
+ * **summarise()** to condense multiple values to a single value.
+ * **sample_n()** and **sample_frac()** to take random samples.
+
+
+```{r,echo=TRUE}
+rm(list = ls())
+load("../data/ex3/guardianapi_uknews_combined.Rda")
+```
+
+## Example: filter()
+```{r,echo=TRUE}
+# Base R
+system.time({
+  extracted_1 <- garticles[garticles$sectionId == "business" & garticles$wordcount > 700,]
+})
+
+# dplyr
+system.time({
+  extracted_2 <- dplyr::filter(garticles, sectionId == "business", wordcount > 700)
+})
+
+```
+
+## Example: mutate()
+```{r,echo=TRUE}
+# Base R
+# 1
+# system.time({
+#   garticles$about_economics_1 <- NA
+#   for (i in 1:nrow(garticles)){
+#     garticles[i,]$about_economics_1 <- (garticles[i,]$sectionId == "money" | garticles[i,]$sectionId == "business")
+#   }
+# })
+# 2
+system.time({
+  garticles$about_economics_1 <- garticles$sectionId %in% c("money","business")
+})
+
+# dplyr
+system.time({
+  garticles <- dplyr::mutate(garticles, about_economics_2 = sectionId %in% c("money","business"))
+})
+
+```
+
+## Example: group_by()
+
+ * groupy_by() allows the splitting of a dataset into subgroups and which can then be used to be processed further.
+ 
+ 
+```{r,echo=TRUE}
+# Base R 
+system.time({
+  section <- unique(garticles$sectionId)
+  mean_pagenumber <- rep(NA, length(section))
+  mean_wordcount <- rep(NA, length(section))
+  n <- rep(NA, length(section))
+  for (i in 1:length(section)){
+    sec <- section[i]
+    subset <- garticles[garticles$sectionId == sec,]
+    mean_wordcount[i] <- mean(subset$wordcount, na.rm = TRUE)
+    mean_pagenumber[i] <- mean(subset$newspaperPageNumber, na.rm = TRUE)
+    n[i] <- nrow(subset)
+  }
+  words_1 <- cbind.data.frame(section = section,
+                             wordcount = mean_wordcount,
+                             pageNumber = mean_pagenumber,
+                             count = n)
+})
+
+# dplyr
+system.time({
+  by_section <- group_by(garticles, sectionId)
+  words_2 <- summarise(by_section,
+                     wordcount = mean(wordcount, na.rm = TRUE),
+                     pageNumber = mean(newspaperPageNumber, na.rm = TRUE),
+                     count=n())
+
+})
+
+```
+ 
+## Visualization of our results
+ 
+```{r,echo=TRUE}
+library(ggplot2)
+ggplot(words_2, aes(wordcount, pageNumber)) +
+  geom_point(aes(size = count), alpha = 1/2) +
+  geom_smooth() +
+  scale_size_area()
+```
+
+## The pipe operator %>%
+
+Dplyr (and other packages of the tidyverse) make use of a pipe operator %>%. Instead of saving results in intermediate data.frames or replacing the current data.frame in every line, we can transfer the output of one operation directly to the next. This saves space and makes the code more readable (because we need to use less parentheses).
+
+```{r,echo=TRUE}
+by_section <- group_by(garticles, sectionId)
+words_2 <- summarise(by_section,
+                   wordcount = mean(wordcount, na.rm = TRUE),
+                   pageNumber = mean(newspaperPageNumber, na.rm = TRUE),
+                   count=n())
+head(words_2)
+```
+
+
+Can be rewritten to:
+
+```{r,echo=TRUE}
+words_3 <- garticles %>% 
+  group_by(sectionId) %>% 
+  summarise(wordcount = mean(wordcount, na.rm=T),
+            pageNumber = mean(newspaperPageNumber, na.rm = TRUE),
+            count=n())
+head(words_3)
+```
+
+# **data.table**
+
+data.table is a format that allows the storage and handling of large datasets. It is comparable to the data processing with dplyr. data.table seems to perform better for really large datasets and is more similar to the syntax of data.frames of base R. So if you are already familiar with the data.frame notation you might prefer this syntax. 
+
+**Repetion data.frames**:
+
+ * You can access the variables (columns) of a data.frame in two ways:
+     * df$variable selects the column 'variable'
+     * df[,c("variable")] selects the column 'variable' as well. This is more useful if you want to select multiple columns
+
+ * You subset data.frames by refering to conditions on their rows and columns. Everything that is before the "," refers to rows. Everything that's after the "," refers to the columns. Above we introduced the condition df$column == "variable".
+ 
+     * df[df$variable == 1,] conditions on the rows. This would lead to a subsetting of the data.frame in a sense that we only get rows where a particular 'variable' has the value 1.
+
+
+**data.table**
+Now, data table allows for the same syntax, but follows a logic that is similar to SQL (language which is used in data bases). The additional processes are appended after the regular syntax leading to the general formulation:
+
+ * data.table[subsetting, operation, grouping]
+ 
+     * **subsetting**: This is what happens before the first ','. This is similar to the data.frame.
+         * data.table[variable1 == 'A'] selects only rows where the column 'variable1' is equal to 'A'.
+         
+     * **operations**: This is what happens after the first ',' and before the second ','. This is an enhanced conditioning on the columns as they not only allow for the subsetting of the columns, but also for their modification.
+         * data.table[, .(variable1, variable2)] selects every row but only the two columns 'variable1' and 'variable2'. The .(...) represents an operation: select only two variables.
+         * data.table[variable1 == "A", .(variable1, variable2)] selects only rows where the column 'variable1' is queal to 'A' (subsetting) and then displays  only the two columns 'variable1' and 'variable2' (operation). If you like to, you could also use the old syntax: data.table[data.table$variable1 == "A", c("variable1","variable")]
+         * data.table[variable1 == "A", .(mean_var2 = mean(variable2))] selects rows where the column 'variable1' is equal to 1 (subsetting) and then calculates a mean for those observations for the column 'variable2' (operation) and reports it as 'mean_var2'.
+         * Note: .N can be used as an operation to calculate the number of observations.
+         
+    * **grouping**: Aggregations can be done in the third part of the syntax. E.g. apply an operation to each subgroup of the dataset.
+        * data.table[variable1 == 'A', .N, by = variable2]: Calculates the number of observations (operation: .N) for each group existent in column 'variable2' and but only for observations where the column 'variable1' has the value 'A'.
+
+
+```{r,echo=TRUE}
+rm(list = ls())
+library(data.table)
+load("../data/ex3/guardianapi_uknews_combined.Rda")
+gadt <- data.table::as.data.table(garticles)
+```
+
+```{r,echo=TRUE}
+# base R
+system.time({
+  section <- unique(garticles$sectionId)
+  mean_pagenumber <- rep(NA, length(section))
+  mean_wordcount <- rep(NA, length(section))
+  n <- rep(NA, length(section))
+  for (i in 1:length(section)){
+    sec <- section[i]
+    subset <- garticles[garticles$sectionId == sec,]
+    mean_wordcount[i] <- mean(subset$wordcount, na.rm = TRUE)
+    mean_pagenumber[i] <- mean(subset$newspaperPageNumber, na.rm = TRUE)
+    n[i] <- nrow(subset)
+  }
+  words_1 <- cbind.data.frame(section = section,
+                             wordcount = mean_wordcount,
+                             pageNumber = mean_pagenumber,
+                             count = n)
+})
+
+
+# data.table
+system.time({
+  words_4 <- gadt[,.(mean_wordcount = mean(wordcount, na.rm=TRUE), 
+                 mean_pagenumber = mean(newspaperPageNumber, na.rm = TRUE),
+                 count = .N),
+              by=sectionId]
+  print(head(words_4))
+})
+```
+
+
+<!-- # **Parallelization** -->

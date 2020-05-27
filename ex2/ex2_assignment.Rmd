@@ -1,0 +1,122 @@
+---
+title: "Exercise 2: Assignment"
+author: "Philipp Kling"
+date: "`r Sys.Date()`"
+output:
+  html_document: 
+    code_folding: show
+    fig_height: 6
+    highlight: tango
+    theme: spacelab
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: yes
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+```{r knitr_init, echo=TRUE, cache=FALSE, warning=FALSE}
+library(knitr)
+
+### Global options
+options(max.print="75")
+opts_chunk$set(echo=FALSE,
+	             cache=FALSE,
+               prompt=FALSE,
+               tidy=TRUE,
+               comment=NA,
+               message=FALSE,
+               warning=FALSE)
+opts_knit$set(width=75)
+rm(list = ls())
+```
+
+# Preparation
+
+# Assignment 1: Recoginition, loading, extraction
+
+
+### Recognition
+
+In the Github repository under data/ex2, you will find two files: file_a and file_b. Use a text editor of your choice, inspect each file, and determine what type of data each file includes. 
+
+### File A
+Use an appropriate package to load the **file_a** into R. Try the functions associated with the package you used to load the data to get a feeling for the dataset and extract the following information with it. 
+
+ * Extract a list of the IDs of the books.
+ * What is the name of the author of the 4th book?
+
+```{r,echo=TRUE}
+rm(list = ls())
+```
+
+
+### File B
+
+Use an appropriate package to load the **file_b** into R. 
+
+* What is the email of Mr. Bea?
+
+```{r,echo=TRUE}
+rm(list = ls())
+```
+
+
+
+# Assignment 2: Extract date with Regular Expressions {.tabset .tabset-fade .tabset-pills}
+
+You have the URL to an article of the Guardian. Use regular expressions to extract the publication date of the linked article. Your procedure should be generally applicable to the articles of The Guardian and not only apply to this single link. Use the package __stringr__ and its function __str_extract__ or optionally __str_replace__ to solve this task. (Hint: Slashes and Backslashes must be escaped with two preceding backslashes; e.g. '\ \ /' or '\ \ \'. The package lubridate and its function as_date() are helpful when trying to transform text to dates.)
+
+```{r,echo=TRUE}
+url <- "https://www.theguardian.com/society/2018/oct/11/new-law-employers-reveal-race-pay-gap-figures"
+# Structure: https://www.theguardian.com/category/year/month/day/headlinetext
+result <- lubridate::as_date("2018-10-11")  # The result should look like this.
+```
+
+
+# Assignment 3: Translation
+
+Take the content of file_b used in the first assignment. Transform it into an XML-File format by hand. You can use 
+https://www.xmlvalidation.com to validate your attempts.
+
+
+# Assignment 4: Improvement of a regular expression
+
+In the exercise slides we extracted the first names of a string that was obtained from the UZH website. Remember?
+
+```{r,echo=TRUE}
+text <- "Abou-Chadi Tarik AFL-H-359 +41 44 634 52 03Caramani Daniele AFL-H-344
++41 44 634 40 10Donnay Karsten AFL-H-350 +41 44 634 58 57"
+unlist(stringr::str_extract_all(string = text,
+                                pattern = "[A-Z]{1}[a-z]+ [A-Z]{1}[a-z]+"))
+```
+
+Upon inspection of the result, we see that we only extracted 'Chadi' despite the full name of Tarik being 'Abou-Chadi'. Please improve our regular expression to extract the full names of this text.
+
+
+# Assignment 5: Text analysis
+
+Take the following text which is the body of an article retrieved from the Guardian. It still has some HTML code attached to it. In HTML paragraphs are separated by the opening tag '<p>' and the closing tag </p>. Suppose you would like to know of how many paragraphs this article consists. The code to retrieve this information could look like this:
+
+```{r,echo=TRUE}
+load("../data/ex2/articlebody.Rda")
+parags <- unlist(stringr::str_extract_all(articlebody, pattern='<p>([:print:])+?</p>'))
+length(parags)
+```
+
+**Assignment**: Extract the following information using R and Regular expressions:
+
+ * How many links are included in this article body?
+ * How many of those links redirect to another Guardian article?
+
+```{r,echo=TRUE}
+load("../data/ex2/articlebody.Rda")
+```
+
+**Hints:**
+
+ * You may visit this page: https://regexr.com/ and copy the article body into the text field and see the results of your Regular expressions. There are small differences e.g. word and non-word characters on this page would be [\w\W] and in R you could write [:print:] instead.
+ * +? is a non-greedy operator. It means it should match at least once (+) but we match only one occurrence (?) and not as many as possible.

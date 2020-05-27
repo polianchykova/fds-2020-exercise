@@ -1,0 +1,114 @@
+---
+title: "Exercise 3: Assignment"
+author: "Philipp Kling"
+date: "`r Sys.Date()`"
+output:
+  html_document: 
+    code_folding: show
+    fig_height: 6
+    highlight: tango
+    theme: spacelab
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: yes
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+```{r knitr_init, echo=TRUE, cache=FALSE, warning=FALSE}
+library(knitr)
+
+### Global options
+options(max.print="75")
+opts_chunk$set(echo=FALSE,
+	             cache=FALSE,
+               prompt=FALSE,
+               tidy=TRUE,
+               comment=NA,
+               message=FALSE,
+               warning=FALSE)
+opts_knit$set(width=75)
+rm(list = ls())
+```
+
+# Preparation
+
+Install the 'nycflights13' package and load the data into R.
+```{r,echo=TRUE}
+library(nycflights13)
+```
+
+# Overview
+You can get a basic overview of the dataset with these functions
+```{r,echo=TRUE}
+# How many rows and columns?
+dim(flights)  #  or: nrow(flights)    ncol(flights)
+# What are the names of the variables/columns?
+colnames(flights)
+# Summary statistics
+summary(flights)
+```
+
+
+# Assignment 1: Subsetting and alterations with dplyr
+
+### 1. Use dplyr to create a variable 'caught_up' that only consists of values that are TRUE or FALSE and which indicates whether a flight *caught up* with a departure delay. I.e. it should be TRUE if the delay at arrival was less than the delay of the departure and FALSE otherwise.
+ 
+```{r,echo=TRUE}
+solution <- ""
+```
+ 
+ 
+### 2. Use dplyr to filter the dataset to include only flights that had a delayed departure. Report which percentage of the flights had a delayed departure. How many of those delayed flights also had a delayed arrival?
+ 
+```{r,echo=TRUE}
+library(dplyr)
+solution <- ""
+```
+
+ 
+# Assignment 2: Summary statistics
+
+### 1. Do flights from JFK have a greater departure delay than flights from EWR on average? Use dplyr to find out.
+
+```{r,echo=TRUE}
+library(dplyr)
+solution <- ""
+```
+
+### 2. Which airport is the most common to get to Chicago O'Hare International Airport (ORD)? Use dplyr to find out.
+
+
+```{r,echo=TRUE}
+library(dplyr)
+solution <- ""
+```
+
+# Assignment 3: Rewriting
+
+### 1. Rewrite the following statement with a pipe operator (%>%).
+
+```{r,echo=TRUE}
+library(dplyr)
+sum(select(sample_n(filter(flights, origin=="JFK",dest=="PHX"), 200), air_time), na.rm=T)
+```
+
+```{r,echo=TRUE}
+solution <- ""
+```
+
+### 2. Rewrite the following statement with dplyr and in data.table format.
+
+"Average departure delay for every flight to Phoenix (PHX) differentiated by carrier and airport of origin."
+
+```{r,echo=TRUE}
+library(dplyr)
+library(data.table)
+
+solution_dplyr <- ""
+
+solution_dtable <- ""
+```
