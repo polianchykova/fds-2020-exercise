@@ -1,7 +1,7 @@
 ---
 title: "Exercise 2: Assignment"
 author: "Philipp Kling"
-date: "`r Sys.Date()`"
+date: "16.06.2020"
 output:
   html_document: 
     code_folding: show
@@ -81,42 +81,3 @@ result <- lubridate::as_date("2018-10-11")  # The result should look like this.
 
 Take the content of file_b used in the first assignment. Transform it into an XML-File format by hand. You can use 
 https://www.xmlvalidation.com to validate your attempts.
-
-
-# Assignment 4: Improvement of a regular expression
-
-In the exercise slides we extracted the first names of a string that was obtained from the UZH website. Remember?
-
-```{r,echo=TRUE}
-text <- "Abou-Chadi Tarik AFL-H-359 +41 44 634 52 03Caramani Daniele AFL-H-344
-+41 44 634 40 10Donnay Karsten AFL-H-350 +41 44 634 58 57"
-unlist(stringr::str_extract_all(string = text,
-                                pattern = "[A-Z]{1}[a-z]+ [A-Z]{1}[a-z]+"))
-```
-
-Upon inspection of the result, we see that we only extracted 'Chadi' despite the full name of Tarik being 'Abou-Chadi'. Please improve our regular expression to extract the full names of this text.
-
-
-# Assignment 5: Text analysis
-
-Take the following text which is the body of an article retrieved from the Guardian. It still has some HTML code attached to it. In HTML paragraphs are separated by the opening tag '<p>' and the closing tag </p>. Suppose you would like to know of how many paragraphs this article consists. The code to retrieve this information could look like this:
-
-```{r,echo=TRUE}
-load("../data/ex2/articlebody.Rda")
-parags <- unlist(stringr::str_extract_all(articlebody, pattern='<p>([:print:])+?</p>'))
-length(parags)
-```
-
-**Assignment**: Extract the following information using R and Regular expressions:
-
- * How many links are included in this article body?
- * How many of those links redirect to another Guardian article?
-
-```{r,echo=TRUE}
-load("../data/ex2/articlebody.Rda")
-```
-
-**Hints:**
-
- * You may visit this page: https://regexr.com/ and copy the article body into the text field and see the results of your Regular expressions. There are small differences e.g. word and non-word characters on this page would be [\w\W] and in R you could write [:print:] instead.
- * +? is a non-greedy operator. It means it should match at least once (+) but we match only one occurrence (?) and not as many as possible.

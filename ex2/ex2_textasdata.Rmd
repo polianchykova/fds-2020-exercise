@@ -1,0 +1,96 @@
+---
+title: "Exercise 2: Text as data"
+author: "Philipp Kling"
+date: "16.06.2020"
+output:
+  html_document: 
+    code_folding: show
+    fig_height: 6
+    highlight: tango
+    theme: spacelab
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: yes
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+```{r knitr_init, echo=TRUE, cache=FALSE, warning=FALSE}
+library(knitr)
+
+### Global options
+options(max.print="75")
+opts_chunk$set(echo=FALSE,
+	             cache=FALSE,
+               prompt=FALSE,
+               tidy=TRUE,
+               comment=NA,
+               message=FALSE,
+               warning=FALSE)
+opts_knit$set(width=75)
+rm(list = ls())
+```
+
+
+# Improvement of a regular expression
+
+In the exercise slides we extracted the first names of a string that was obtained from the UZH website. Remember?
+
+```{r,echo=TRUE}
+text <- "Abou-Chadi Tarik AFL-H-359 +41 44 634 52 03Caramani Daniele AFL-H-344
++41 44 634 40 10Donnay Karsten AFL-H-350 +41 44 634 58 57"
+unlist(stringr::str_extract_all(string = text,
+                                pattern = "[A-Z]{1}[a-z]+ [A-Z]{1}[a-z]+"))
+```
+
+Upon inspection of the result, we see that we only extracted 'Chadi' despite the full name of Tarik being 'Abou-Chadi'. We can try to improve this regular expression. Visit https://regexr.com/ to test the regular expressions in real time.
+
+**Solution:** (one of many)
+```{r,echo=TRUE}
+unlist(stringr::str_extract_all(string = text,
+                                pattern = "([A-Z]{1}[a-z]+[-]{1})?[A-Z]{1}[a-z]+ [A-Z]{1}[a-z]+"))
+```
+
+Explanation: we add the '([A-Z]{1}[a-z]+[-]{1})?' at the beginning. This matches everyhing that starts with one big letter, then at least one small letter and subsequently at least one 'minus' (-). We group this statement overall with the parentheses and then specify that this may or may not occur with the '?'.
+
+
+# Analyses of Text data with regular expressions
+
+Take the following text which is the body of an article retrieved from the Guardian. It still has some HTML code attached to it. Have a look at the text.
+
+```{r,echo=TRUE}
+load("/home/philipp/Documents/fds-2020-exercise/data/ex2/articlebody.Rda")
+# substr(articlebody, start=1, stop=1000)
+articlebody
+```
+
+In HTML paragraphs are separated by the opening tag '< p >' and the closing tag '< / p >'. Suppose you would like to know of how many paragraphs this article consists. The code to retrieve this information could look like this:
+
+```{r,echo=TRUE}
+load("/home/philipp/Documents/fds-2020-exercise/data/ex2/articlebody.Rda")
+parags <- unlist(stringr::str_extract_all(articlebody, pattern='<p>([:print:])+?</p>'))
+length(parags)
+```
+
+
+Suppose we also want to know how many links are included in the article body and how many of those links also redirect back to another Guardian article. We could, again, visit this page: https://regexr.com/ and copy the article body into the text field and see the results of your Regular expressions. However, there are small differences e.g. word and non-word characters on this page would be [\\w\\W] and in R you could write [:print:] instead.
+
+
+
+
+Extract every pattern that is included in an "<a>" tag. These are the links.
+```{r,echo=TRUE}
+hrefs <- unlist(stringr::str_extract_all(articlebody, pattern='<a href=\\"([:print:])+?\\">'))
+length(hrefs)
+```
+
+Use **grepl()** to get an indicator if a pattern is included in a text. Links that include "theguardian.com" are the ones that link to other articles.
+
+```{r,echo=TRUE}
+sum(grepl("theguardian.com", hrefs))
+```
+
+

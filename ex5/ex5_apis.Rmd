@@ -1,7 +1,7 @@
 ---
 title: "Exercise 5: APIs"
 author: "Philipp Kling"
-date: "`r Sys.Date()`"
+date: "19.06.2020"
 output:
   html_document:
     toc: true
@@ -33,9 +33,8 @@ opts_chunk$set(echo=FALSE,
                comment=NA,
                message=FALSE,
                warning=FALSE)
-opts_knit$set(width=75)
+opts_knit$set(width=75,root.dir = "/home/philipp/Documents/fds-2020-exercise")
 rm(list = ls())
-# load("/home/philipp/Documents/data/vignettes/data/vignettes_RDATA.Rda")
 ```
 
 # Preparation
@@ -155,7 +154,7 @@ print(query_url)
 
 ```{r,echo=TRUE, eval=FALSE}
 articles_get <- httr::GET(query_url)
-save(articles_get, file=paste("../data/ex5/guardianapi-own-debate-notbrexit-",Sys.Date(),".Rda",sep=""))
+save(articles_get, file=paste("./data/ex5/guardianapi-own-debate-notbrexit-",Sys.Date(),".Rda",sep=""))
 ```
 
 What is returned has several properties:
@@ -171,7 +170,7 @@ Next steps: transform it into a dataframe so we can work with it.
  * Transform JSON to data frame
  
 ```{r,echo=TRUE}
-load("../data/ex5/guardianapi-own-debate-notbrexit-2020-04-30.Rda")
+load("./data/ex5/guardianapi-own-debate-notbrexit-2020-04-30.Rda")
 
  # Transforms the response to a JSON data format
 articles_text <- httr::content(articles_get, "text") 
@@ -201,7 +200,7 @@ save(gres, file= paste("../data/ex5/guardianapi-GuardianR-uknews-2020-04-20--202
 ```
 
 ```{r,echo=TRUE}
-load("../data/ex5/guardianapi-GuardianR-uknews-2020-04-20--2020-04-21--date-2020-04-30.Rda")
+load("./data/ex5/guardianapi-GuardianR-uknews-2020-04-20--2020-04-21--date-2020-04-30.Rda")
 head(gres)
 ```
 
@@ -267,20 +266,20 @@ Request the first 5.000 friends of The Guardian
 friends_json <- my_oauth$OAuthRequest(URL=url, 
                                       params=list(screen_name = "guardian", stringify_ids="true"),
                                       method="GET")
-save(friends_json, file=paste("../data/ex5/guardian-friends-json-",Sys.Date(),".Rda", sep=""))
+save(friends_json, file=paste("./data/ex5/guardian-friends-json-",Sys.Date(),".Rda", sep=""))
 ```
 
 
 Recognize it as JSON and parse it accordingly into R.
 ```{r,echo=TRUE}
-load("../data/ex5/guardian-friends-json-2020-04-30.Rda")
+load("./data/ex5/guardian-friends-json-2020-04-30.Rda")
 
 # Parse it into R
 friends <- jsonlite::fromJSON(friends_json)
 
 # Extract the IDs
 friend_ids <- friends$ids
-save(friend_ids, file=paste("../data/ex5/guardian-friends-ids-",Sys.Date(),".Rda", sep=""))
+save(friend_ids, file=paste("./data/ex5/guardian-friends-ids-",Sys.Date(),".Rda", sep=""))
 length(friend_ids)
 ```
 
@@ -299,11 +298,11 @@ Request the first 5.000 followers of The Guardian
 followers1_json <- my_oauth$OAuthRequest(URL=url, 
                                       params=list(screen_name = "guardian", stringify_ids="true"),
                                       method="GET")
-save(followers1_json, file=paste("../data/ex5/guardian-followers-1-json-",Sys.Date(),".Rda", sep=""))
+save(followers1_json, file=paste("./data/ex5/guardian-followers-1-json-",Sys.Date(),".Rda", sep=""))
 ```
 
 ```{r,echo=TRUE}
-load("../data/ex5/guardian-followers-1-json-2020-04-30.Rda")
+load("./data/ex5/guardian-followers-1-json-2020-04-30.Rda")
 
 # Parse it into R
 followers <- jsonlite::fromJSON(followers1_json)
@@ -328,7 +327,7 @@ followers2_json <- my_oauth$OAuthRequest(URL=url,
                                                   stringify_ids="true", 
                                                   cursor=followers$next_cursor_str),
                                       method="GET")
-save(followers2_json, file=paste("../data/ex5/guardian-followers-2-json-",Sys.Date(),".Rda", sep=""))
+save(followers2_json, file=paste("./data/ex5/guardian-followers-2-json-",Sys.Date(),".Rda", sep=""))
 ```
 
 Compare the two chunks:
@@ -337,8 +336,8 @@ Compare the two chunks:
  * None share the same IDs
  
 ```{r,echo=TRUE}
-load("../data/ex5/guardian-followers-1-json-2020-04-30.Rda")
-load("../data/ex5/guardian-followers-2-json-2020-04-30.Rda")
+load("./data/ex5/guardian-followers-1-json-2020-04-30.Rda")
+load("./data/ex5/guardian-followers-2-json-2020-04-30.Rda")
 
 # Parse it into R
 followers1 <- jsonlite::fromJSON(followers1_json)
@@ -369,13 +368,13 @@ library(rtweet)
 rt <- rtweet::search_tweets(
   "lang:en", geocode = rtweet::lookup_coords("usa"), n = 10000
 )
-save(rt, file="/home/philipp/Dropbox/uni_dokumente_dropbox/dissertation/seminars/icss_zuerich/data/tweets_us_20200422.Rda")
+save(rt, file=paste("./data/ex5/tweets_us_",,Sys.Date(),".Rda",sep=""))
 ```
 
 ```{r,echo=TRUE}
 library(rtweet)
 ## Or: load pre-downloaded Tweets
-load("/home/philipp/Dropbox/uni_dokumente_dropbox/dissertation/seminars/icss_zuerich/data/tweets_us_20200422.Rda")
+load("./data/ex5/tweets_us_20200422.Rda")
 
 ## create lat/lng variables using all available tweet and profile geo-location data
 rt <- lat_lng(rt)
@@ -393,12 +392,12 @@ with(rt, points(lng, lat, pch = 20, cex = .75, col = rgb(0, .3, .7, .75)))
 
 ```{r,echo=TRUE, eval=FALSE}
 tml <- rtweet::get_timelines(user = "guardian", n = 3200)
-save(tml, file=paste("../data/ex5/guardian-timeline-rtweet-",Sys.Date(),".Rda",sep=""))
+save(tml, file=paste("./data/ex5/guardian-timeline-rtweet-",Sys.Date(),".Rda",sep=""))
 ```
 
 ```{r,echo=TRUE}
 # setwd("./ex5")
-load("../data/ex5/guardian-timeline-rtweet-2020-04-27.Rda")
+load("./data/ex5/guardian-timeline-rtweet-2020-04-27.Rda")
 ```
 
 Plot 
@@ -438,22 +437,22 @@ On Twitter, we have the problem that Tweets encompass personal information. Peop
  
 We need to respect this privacy and adapt to this situation. Despite making it potentially impossible for other researchers to reproduce our results, we will provide the Tweet IDs (status_id) of our retrieved Tweets. This enables other researchers to retrieve the Tweets from the API, and Twitter itself will handle the provision of information: if e.g. a person set their profile to 'private' or deleted their Tweet, the Twitter API will not yield the information for a specific status ID. 
 
-```{r,echo=TRUE}
+```{r,echo=TRUE,eval=FALSE}
 tml_ids <- tml$status_id
-save(tml_ids, file=paste("../data/ex5/tml-publication-",Sys.Date(),".Rda", sep=""))
-save(tml, file=paste("../data/ex5/tml-private-",Sys.Date(),".Rda", sep=""))
+save(tml_ids, file=paste("./data/ex5/tml-publication-",Sys.Date(),".Rda", sep=""))
+save(tml, file=paste("./data/ex5/tml-private-",Sys.Date(),".Rda", sep=""))
 ```
 
 Despite us being able to save the complete data set for our personal purpose, another researcher could use the status IDs in the following way to reproduce our results.
 
 ```{r,echo=TRUE,eval=FALSE}
-load(paste("../data/ex5/tml-publication-",Sys.Date(),".Rda", sep=""))
+load(paste("./data/ex5/tml-publication-",Sys.Date(),".Rda", sep=""))
 statuses_repr <- rtweet::lookup_statuses(tml_ids)
 save(statuses_repr, file=paste("../data/ex5/tml-reproduced-",Sys.Date(),".Rda", sep=""))
 ```
 
 ```{r,echo=TRUE}
-load("../data/ex5/tml-reproduced-2020-04-30.Rda")
+load("./data/ex5/tml-reproduced-2020-04-30.Rda")
 table(tml$status_id %in% statuses_repr$status_id)
 ```
 
@@ -464,23 +463,28 @@ Hashes are a 'message digest' of text - the algorithmic product of an applicatio
 ```{r,echo=TRUE, eval=FALSE}
 # Get e.g. the retweeters of one status of The Guardian.
 accounts <- rtweet::get_retweeters(status_id = "1254605442124255234")
-save(accounts, file=paste("../data/ex5/retweeters-1254605442124255234-",Sys.Date(),".Rda",sep=""))
+save(accounts, file=paste("./data/ex5/retweeters-1254605442124255234-",Sys.Date(),".Rda",sep=""))
 ```
 
-```{r,echo=TRUE}
+```{r,echo=TRUE, eval=FALSE}
 # Load the previously downloaded Retweeters
-load("../data/ex5/retweeters-1254605442124255234-2020-04-30.Rda")
+load("./data/ex5/retweeters-1254605442124255234-2020-04-30.Rda")
 
 # Get additional information
 accounts_info <- rtweet::lookup_users(accounts$user_id)
 
 # Extract only information we are interested in (account information)
-info <- accounts_info[,c("user_id","protected","followers_count","friends_count","statuses_count","favourites_count","account_created_at","verified")]
+info <- accounts_info[,c("user_id","protected","followers_count",
+                         "friends_count","statuses_count",
+                         "favourites_count","account_created_at",
+                         "verified")]
 head(info)
 
 # Hash the IDs of the Twitter users to anonymize them.
-info$user_id <- sapply(info$user_id, digest::digest, algo="sha2")
+info$user_id <- sapply(info$user_id, 
+                       digest::digest, 
+                       algo="sha2")
 table(duplicated(info$user_id))
 head(info)
-save(info, file=paste("../data/ex5/retweeters-1254605442124255234-",Sys.Date(),"-anonymized.Rda",sep=""))
+save(info, file=paste("./data/ex5/retweeters-1254605442124255234-",Sys.Date(),"-anonymized.Rda",sep=""))
 ```
