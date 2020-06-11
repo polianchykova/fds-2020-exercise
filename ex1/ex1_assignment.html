@@ -12,7 +12,7 @@
 
 <meta name="author" content="Philipp Kling" />
 
-<meta name="date" content="2020-05-26" />
+<meta name="date" content="2020-06-11" />
 
 <title>Exercise 1: Assignment</title>
 
@@ -1672,7 +1672,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Exercise 1: Assignment</h1>
 <h4 class="author">Philipp Kling</h4>
-<h4 class="date">2020-05-26</h4>
+<h4 class="date">2020-06-11</h4>
 
 </div>
 
@@ -1704,23 +1704,10 @@ div.tocify {
 <li><strong>guardian.Rda</strong>: articles of The Guardian obtained via its API. Contains information about an article, its author and its content.</li>
 <li><strong>twitter.Rda</strong>: Tweets published by the account ‘guardian’ on Twitter. These Tweets often represent links to articles of The Guardian and contain information about the reactions to those articles (such as how many people favorited these statuses).</li>
 </ul>
-<p><strong>Assignment:</strong> Find a suitable variable to merge these two datasets on and then create a combined dataset that contains information about both the article characteristics (from the Guardian API) and the Twitter characteristics. Report how many observations you lose from each original dataset.</p>
+<p><strong>Assignment:</strong> Find a suitable variable to merge these two datasets on and then create a combined dataset that contains information about both the article characteristics (from the Guardian API) and the Twitter characteristics. Then use the <strong>merge()</strong> command to merge the two datasets. Report how many observations you lose from each original dataset.</p>
 </div>
-<div id="assignment-3-data-manipulation" class="section level1">
-<h1>Assignment 3: Data manipulation</h1>
-<p>Load the combined dataset contained in the same folder (combined.Rda). The variable ‘created_at’ contains information of the exact time a Tweet was created. The variable ‘webPublicationDate’. We use lubridate::as_date() to convert both variables to dates that we try to compare.</p>
-<ul>
-<li>Create a variable (or multiple variables) that compare(s) the date of publication on the website and on Twitter. In particular it should be able to tell if a URL was published on the same day on Twitter or whether it was delayed or even advancely published on Twitter.</li>
-<li>How many articles were published on Twitter before they were published on the website? What could be a potential explanation for this strange occurrence? Use other variables to get insights and the table function to get an overview.</li>
-</ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">rm</span>(<span class="dt">list =</span> <span class="kw">ls</span>())</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw">load</span>(<span class="st">&quot;../data/ex1/combined.Rda&quot;</span>)</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb2-4" data-line-number="4">combined<span class="op">$</span>date_web &lt;-<span class="st"> </span>lubridate<span class="op">::</span><span class="kw">as_date</span>(combined<span class="op">$</span>webPublicationDate)</a>
-<a class="sourceLine" id="cb2-5" data-line-number="5">combined<span class="op">$</span>date_twitter &lt;-<span class="st"> </span>lubridate<span class="op">::</span><span class="kw">as_date</span>(combined<span class="op">$</span>created_at)</a></code></pre></div>
-</div>
-<div id="assignment-4-insights" class="section level1">
-<h1>Assignment 4: Insights</h1>
+<div id="assignment-3-insights" class="section level1">
+<h1>Assignment 3: Insights</h1>
 <ul>
 <li>Does the page number where the article occurred in the newspaper have a positive or negative correlation with the number of Retweets an article received?</li>
 <li>Do articles about music get more or less frequently liked (“favorited”) than sport articles?</li>
