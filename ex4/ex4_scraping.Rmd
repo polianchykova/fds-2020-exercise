@@ -1,21 +1,23 @@
 ---
-title: "Exercise 4: Scraping"
+title: 'Exercise 4: Scraping'
 author: "Philipp Kling"
 date: "18.06.2020"
 output:
+  pdf_document:
+    toc: yes
   html_document:
-    toc: true
-    number_sections: false
     code_folding: show
-    theme: spacelab
-    highlight: tango
-    fig_width: 7
-    fig_height: 6
     df_print: paged
+    fig_height: 6
+    fig_width: 7
+    highlight: tango
+    number_sections: no
+    theme: spacelab
+    toc: yes
     toc_float:
-      collapsed: false
-      smooth_scroll: true
-editor_options: 
+      collapsed: no
+      smooth_scroll: yes
+editor_options:
   chunk_output_type: console
 ---
 
@@ -162,7 +164,7 @@ get_article_urls_from_page <- function(page_nbr){
 
 
 
-## Iterate through pages
+## Outline: Iterate through pages
 
  * Note: this seems possible to a maximum of page 1900 which is about October, 11, 2018 (Date: 2020-04-22). Apparently there are 506,781 articles, which should amount to 25339 pages (we can, thus, get about 7% of the articles via this method).
  * Note: page = 1 represents the "all"-page previously scraped.
@@ -178,7 +180,7 @@ save(page_df, file=paste("../data/ex4/theguardian-uknews-p1-p3-",Sys.Date(),".Rd
 ```
 
 
-# Scrape until a specific date is reached.
+## Outline: Scrape until a specific date is reached.
 
 It seems unpractical to scrape pages based on their number. Instead it would be more helpful if we could stop at a specific date. To do so we:
 

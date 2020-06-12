@@ -1,21 +1,23 @@
 ---
-title: "Exercise 5: APIs"
+title: 'Exercise 5: APIs'
 author: "Philipp Kling"
 date: "19.06.2020"
 output:
   html_document:
-    toc: true
-    number_sections: true
     code_folding: show
-    theme: spacelab
-    highlight: tango
-    fig_width: 7
-    fig_height: 6
     df_print: paged
+    fig_height: 6
+    fig_width: 7
+    highlight: tango
+    number_sections: yes
+    theme: spacelab
+    toc: yes
     toc_float:
-      collapsed: false
-      smooth_scroll: true
-editor_options: 
+      collapsed: no
+      smooth_scroll: yes
+  pdf_document:
+    toc: yes
+editor_options:
   chunk_output_type: console
 ---
 
@@ -70,7 +72,7 @@ library(ggplot2)
  * Load key into R
  
 ```{r,echo=TRUE}
-guardian_creds <- yaml.load_file("/home/philipp/Documents/keys/guardian_api/api_key1.yaml")
+guardian_creds <- yaml::yaml.load_file("/home/philipp/Documents/keys/guardian_api/api_key1.yaml")
 ```
 
 ## Build your own access to the API
@@ -130,12 +132,13 @@ build_guardian_query <- function(content=NULL, not_content=NULL, tag=NULL, from_
   ifelse(is.null(content), query_url <- query_url, query_url <- paste(query_url, "?q=", paste(content, collapse = " AND "), sep=""))
   
   # Append the not desired keywords with the 'AND NOT' if existent
-  ifelse(is.null(not_content), query_url <- query_url, query_url <- paste(query_url, "AND NOT ", paste(not_content, collapse = " AND NOT "), sep="")) 
+  ifelse(is.null(not_content), query_url <- query_url, query_url <- paste(query_url, " AND NOT ", paste(not_content, collapse = " AND NOT "), sep="")) 
   
   # We also want to get the word count of articles
   query_url <- paste(query_url, "&show-fields=wordcount", sep="")
   
   # Append the API key to the query
+  # query_url <- paste(query_url, "&api-key=", "DEVKEYPLACEHOLDER", sep="")
   query_url <- paste(query_url, "&api-key=", guardian_creds$api_key, sep="")
   
   # Finally: ASCII encode our query to make it valid
@@ -159,10 +162,10 @@ save(articles_get, file=paste("./data/ex5/guardianapi-own-debate-notbrexit-",Sys
 
 What is returned has several properties:
  
-  * articles_get$url: the url used to query the API
-  * articles_get$status_code: the corresponding status code of the query. 200 means it was without any error.
-  * articles_get$content: contains the content of the query. This is what we are mainly interested in.
-  * articles_get$date: Date when the query was sent.
+  * articles_ge**t$url**: the url used to query the API
+  * articles_get**$status_code**: the corresponding status code of the query. 200 means it was without any error.
+  * articles_get**$content**: contains the content of the query. This is what we are mainly interested in.
+  * articles_get**$date**: Date when the query was sent.
 
 Next steps: transform it into a dataframe so we can work with it.
 
@@ -174,7 +177,12 @@ load("./data/ex5/guardianapi-own-debate-notbrexit-2020-04-30.Rda")
 
  # Transforms the response to a JSON data format
 articles_text <- httr::content(articles_get, "text") 
+substr(articles_text, start=1, stop = 500)
+```
 
+This looks like JSON. Next, we need to use **jsonlite** to transform it into a data.frame.
+
+```{r,echo=TRUE}
 # Transforms the JSON Data to an R object
 articles_json <- jsonlite::fromJSON(articles_text)  
 
@@ -458,7 +466,7 @@ table(tml$status_id %in% statuses_repr$status_id)
 
 In case you are evaluating Twitter accounts, this might get more tricky. One solution might be to introduce new identifiers for Twitter accounts that enables their distinction but not their identification. We may use the *digest*-package to create e.g. an SHA-2 Hash.
 
-Hashes are a 'message digest' of text - the algorithmic product of an application of an algorithm to the text. They always have the same length and they only work one way: you can transform text into a hashed form, but you cannot recreate the text from a hashed version of itself. They are commonly used to verify e.g. downloads and to save passwords. As they are unique, we can use them to hash the user IDs. The result are distinct identifier which are able to distinguish between accounts but someone who obtained these can not make conclusions about an individual Twitter account.
+**Hashes** are a 'message digest' of text - the algorithmic product of an application of an algorithm to the text. They always have the same length and they only work one way: you can transform text into a hashed form, but you cannot recreate the text from a hashed version of itself. They are commonly used to verify e.g. downloads and to save passwords. As they are unique, we can use them to hash the user IDs. The result are distinct identifier which are able to distinguish between accounts but someone who obtained these can not make conclusions about an individual Twitter account.
 
 ```{r,echo=TRUE, eval=FALSE}
 # Get e.g. the retweeters of one status of The Guardian.

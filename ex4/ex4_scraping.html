@@ -3068,8 +3068,8 @@ div.tocify {
 <a class="sourceLine" id="cb9-27" data-line-number="27">}</a></code></pre></div>
 </div>
 </div>
-<div id="iterate-through-pages" class="section level2">
-<h2>Iterate through pages</h2>
+<div id="outline-iterate-through-pages" class="section level2">
+<h2>Outline: Iterate through pages</h2>
 <ul>
 <li>Note: this seems possible to a maximum of page 1900 which is about October, 11, 2018 (Date: 2020-04-22). Apparently there are 506,781 articles, which should amount to 25339 pages (we can, thus, get about 7% of the articles via this method).</li>
 <li>Note: page = 1 represents the “all”-page previously scraped.</li>
@@ -3083,9 +3083,8 @@ div.tocify {
 <a class="sourceLine" id="cb10-7" data-line-number="7"><span class="kw">save</span>(page_df, <span class="dt">file =</span> <span class="kw">paste</span>(<span class="st">&quot;../data/ex4/theguardian-uknews-p1-p3-&quot;</span>, <span class="kw">Sys.Date</span>(), </a>
 <a class="sourceLine" id="cb10-8" data-line-number="8">    <span class="st">&quot;.Rda&quot;</span>, <span class="dt">sep =</span> <span class="st">&quot;&quot;</span>))</a></code></pre></div>
 </div>
-</div>
-<div id="scrape-until-a-specific-date-is-reached." class="section level1">
-<h1>Scrape until a specific date is reached.</h1>
+<div id="outline-scrape-until-a-specific-date-is-reached." class="section level2">
+<h2>Outline: Scrape until a specific date is reached.</h2>
 <p>It seems unpractical to scrape pages based on their number. Instead it would be more helpful if we could stop at a specific date. To do so we:</p>
 <ul>
 <li>define a variable which enables and breaks the scraping: ‘scrape’</li>
@@ -3128,6 +3127,7 @@ div.tocify {
 <a class="sourceLine" id="cb11-34" data-line-number="34"><span class="kw">table</span>(res_page_df<span class="op">$</span>date)</a>
 <a class="sourceLine" id="cb11-35" data-line-number="35"><span class="kw">save</span>(page_df, <span class="dt">file =</span> <span class="kw">paste</span>(<span class="st">&quot;../data/ex4/theguardian-uknews-&quot;</span>, stop, <span class="st">&quot;--&quot;</span>, <span class="kw">Sys.Date</span>(), </a>
 <a class="sourceLine" id="cb11-36" data-line-number="36">    <span class="st">&quot;.Rda&quot;</span>, <span class="dt">sep =</span> <span class="st">&quot;&quot;</span>))</a></code></pre></div>
+</div>
 </div>
 <div id="scrape-dynamic-pages" class="section level1">
 <h1>Scrape dynamic pages</h1>

@@ -1,9 +1,11 @@
 ---
-title: "Exercise 2: Text as data"
+title: 'Exercise 2: Text as data'
 author: "Philipp Kling"
 date: "16.06.2020"
 output:
-  html_document: 
+  pdf_document:
+    toc: yes
+  html_document:
     code_folding: show
     fig_height: 6
     highlight: tango
@@ -12,7 +14,7 @@ output:
     toc_float:
       collapsed: no
       smooth_scroll: yes
-editor_options: 
+editor_options:
   chunk_output_type: console
 ---
 
@@ -67,7 +69,7 @@ load("/home/philipp/Documents/fds-2020-exercise/data/ex2/articlebody.Rda")
 articlebody
 ```
 
-In HTML paragraphs are separated by the opening tag '< p >' and the closing tag '< / p >'. Suppose you would like to know of how many paragraphs this article consists. The code to retrieve this information could look like this:
+In HTML paragraphs are separated by the opening tag '\<p\>' and the closing tag '\<\/p\>'. Suppose you would like to know of how many paragraphs this article consists. The code to retrieve this information could look like this: everything that is a printable character and comes in between two paragraph tags. Note: "+?" is indicating a "lazy" search. If we would use "+" it would match everything from the first paragraph until the last paragraph. Using "+?" only matches to the first occurrence of an ending tag.
 
 ```{r,echo=TRUE}
 load("/home/philipp/Documents/fds-2020-exercise/data/ex2/articlebody.Rda")
@@ -78,10 +80,8 @@ length(parags)
 
 Suppose we also want to know how many links are included in the article body and how many of those links also redirect back to another Guardian article. We could, again, visit this page: https://regexr.com/ and copy the article body into the text field and see the results of your Regular expressions. However, there are small differences e.g. word and non-word characters on this page would be [\\w\\W] and in R you could write [:print:] instead.
 
+Extract every pattern that is included in an "\<a\>" tag. These are the links.
 
-
-
-Extract every pattern that is included in an "<a>" tag. These are the links.
 ```{r,echo=TRUE}
 hrefs <- unlist(stringr::str_extract_all(articlebody, pattern='<a href=\\"([:print:])+?\\">'))
 length(hrefs)
