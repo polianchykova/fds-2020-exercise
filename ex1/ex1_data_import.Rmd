@@ -1,0 +1,132 @@
+---
+title: 'Exercise 1: Data import'
+author: "Philipp Kling"
+date: "15.06.2020"
+output:
+  pdf_document:
+    toc: yes
+  html_document:
+    code_folding: show
+    fig_height: 6
+    highlight: tango
+    theme: spacelab
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: yes
+editor_options:
+  chunk_output_type: console
+---
+
+
+
+```{r knitr_init, echo=TRUE, cache=FALSE, warning=FALSE}
+library(knitr)
+
+## Global options
+options(max.print="75")
+opts_chunk$set(echo=FALSE,
+	             cache=FALSE,
+               prompt=FALSE,
+               tidy=TRUE,
+               comment=NA,
+               message=FALSE,
+               warning=FALSE)
+opts_knit$set(width=75)
+rm(list = ls())
+```
+
+
+# Various ways to import data {.tabset .tabset-fade .tabset-pills}
+
+Here we import the same dataset in 3 common fileformats: an R-data file, a comma separated file, and an Microsoft excel sheet. The first lines of the data look as follows. It has 3 columns, and about 2.500 rows. It contains the links and sections of articles from the Guardian.
+```{r,echo=TRUE}
+rm(list = ls())
+load("/home/philipp/Documents/fds-2020-exercise/data/ex1/testdata.Rda")
+testdata$id <- paste(substr(testdata$id, start=1, stop = 25), "...", sep="")
+testdata$link <- paste(substr(testdata$link, start=1, stop = 25), "...", sep="")
+head(testdata)
+```
+
+## R Data
+
+Load with **load()**.
+```{r,echo=TRUE}
+rm(list = ls())
+load("/home/philipp/Documents/fds-2020-exercise/data/ex1/testdata.Rda")
+dim(testdata)
+```
+
+## Comma separated files
+
+Use **read.csv()**.
+
+```{r,echo=TRUE}
+rm(list = ls())
+combined_csv <- read.csv("/home/philipp/Documents/fds-2020-exercise/data/ex1/testdata.csv")
+```
+
+Attention: check the dimensions: only 1 column, but the dataset included 4 columns.
+```{r,echo=TRUE}
+dim(combined_csv)
+```
+
+Inspect it with a text editor of your choice: you will see that values are not separated by commas, but by semicolons.
+
+```{r,echo=TRUE}
+rm(list = ls())
+combined_csv <- read.csv("/home/philipp/Documents/fds-2020-exercise/data/ex1/testdata.csv", sep=";")
+dim(combined_csv)
+```
+
+## Excel sheets
+
+Install and use the **readxl** package and use the **read_xlsx()** command.
+```{r,echo=TRUE}
+rm(list = ls())
+combined_excel <- readxl::read_xlsx("/home/philipp/Documents/fds-2020-exercise/data/ex1/testdata.xlsx")
+```
+ 
+ 
+# Basic overiew
+
+To get a basic overview of a dataset, we might use **str()**
+
+```{r,echo=TRUE}
+str(combined_excel)
+```
+
+As mentioned above, **dim()** provides us with a basic overview of how many rows and columns are included in the dataset. 
+
+```{r,echo=TRUE}
+dim(combined_excel)
+```
+
+
+The **table()** command provides us with an easy overview of the distribution of a dichotomous or categorical variable.
+
+```{r,echo=TRUE}
+table(combined_excel$sectionId)
+```
+
+You can use **hist()** to plot a histogram of a numeric variable and get an overview. 
+
+```{r,echo=TRUE}
+load("/home/philipp/Documents/foundationsdatascience-2020/data/ex1/combined.Rda")
+hist(combined$favorite_count)
+
+```
+
+You can use **plot()** to plot two variables against each other.
+
+```{r,echo=TRUE}
+plot(combined$favorite_count, combined$retweet_count)
+```
+
+
+
+
+# Git and assignment
+Next you may set up your own github account and download or clone the github repository accompanying the lecture and this exercise. You will find the assignment of the first exercise in the folder "ex1" under the name "ex1_assignment.Rmd" or its HTML and PDF version. You need to complete this assignment by adding the necessary code to the prepared RMarkdown file. Please change the name to "firstname_lastname_assignment_1.Rmd" and upload it in the Dropbox section on **OLAT**. Please keep the general name pattern throughout the next assignments as well.
+
+
