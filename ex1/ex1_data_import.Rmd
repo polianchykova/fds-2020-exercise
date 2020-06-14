@@ -3,6 +3,8 @@ title: 'Exercise 1: Data import'
 author: "Philipp Kling"
 date: "15.06.2020"
 output:
+  pdf_document:
+    toc: yes
   html_document:
     code_folding: show
     fig_height: 6
@@ -12,8 +14,6 @@ output:
     toc_float:
       collapsed: no
       smooth_scroll: yes
-  pdf_document:
-    toc: yes
 editor_options:
   chunk_output_type: console
 ---
@@ -63,20 +63,21 @@ Use **read.csv()**.
 
 ```{r,echo=TRUE}
 rm(list = ls())
-combined_csv <- read.csv("/home/philipp/Documents/fds-2020-exercise/data/ex1/testdata.csv")
+testdata <- read.csv("/home/philipp/Documents/fds-2020-exercise/data/ex1/testdata.csv")
 ```
 
 Attention: check the dimensions: only 1 column, but the dataset included 4 columns.
 ```{r,echo=TRUE}
-dim(combined_csv)
+dim(testdata)
+head(testdata)
 ```
 
 Inspect it with a text editor of your choice: you will see that values are not separated by commas, but by semicolons.
 
 ```{r,echo=TRUE}
 rm(list = ls())
-combined_csv <- read.csv("/home/philipp/Documents/fds-2020-exercise/data/ex1/testdata.csv", sep=";")
-dim(combined_csv)
+testdata <- read.csv("/home/philipp/Documents/fds-2020-exercise/data/ex1/testdata.csv", sep=";")
+dim(testdata)
 ```
 
 ## Excel sheets
