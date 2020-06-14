@@ -3,8 +3,6 @@ title: 'Exercise 1: Assignment'
 author: "Philipp Kling"
 date: "15.06.2020"
 output:
-  pdf_document:
-    toc: yes
   html_document:
     code_folding: hide
     fig_height: 6
@@ -14,6 +12,8 @@ output:
     toc_float:
       collapsed: no
       smooth_scroll: yes
+  pdf_document:
+    toc: yes
 editor_options:
   chunk_output_type: console
 ---
@@ -44,7 +44,7 @@ rm(list = ls())
 
 # Assignment 2: Import dataset
 
-In the data folder under this assignment (data/ex2) you will find two datasets (twitter.Rda, guardian.Rda). These two datasets contain information retrieved from the respective APIs of the two platforms:
+In the data folder under this assignment (data/ex1) you will find two datasets (twitter.Rda, guardian.Rda). These two datasets contain information retrieved from the respective APIs of the two platforms:
 
  * **guardian.Rda**: articles of The Guardian obtained via its API. Contains information about an article, its author and its content.
  * **twitter.Rda**: Tweets published by the account 'guardian' on Twitter. These Tweets often represent links to articles of The Guardian and contain information about the reactions to those articles (such as how many people favorited these statuses).
