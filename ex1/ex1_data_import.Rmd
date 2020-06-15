@@ -3,8 +3,6 @@ title: 'Exercise 1: Data import'
 author: "Philipp Kling"
 date: "15.06.2020"
 output:
-  pdf_document:
-    toc: yes
   html_document:
     code_folding: show
     fig_height: 6
@@ -14,6 +12,8 @@ output:
     toc_float:
       collapsed: no
       smooth_scroll: yes
+  pdf_document:
+    toc: yes
 editor_options:
   chunk_output_type: console
 ---
@@ -124,7 +124,21 @@ You can use **plot()** to plot two variables against each other.
 plot(combined$favorite_count, combined$retweet_count)
 ```
 
+# Rmarkdown
 
+This file is or is produced by a R Markdown file. You will find a detailed introduction to RMarkdown here: https://bookdown.org/yihui/rmarkdown/ and a summary sheet here: https://github.com/rstudio/cheatsheets/raw/master/rmarkdown-2.0.pdf.
+
+In our case, RMarkdown files consist of sections that include text in combination with code ``chunks''. Markdown files allow us to combine text with code. Markdown files keep the syntax simple and use comparable syntax to LaTeX and HTML. Often, the same commands that work in LaTeX work with Markdown as well. Basic text formatting is done with the following commands:
+
+ * you can make text italic by putting \* or \_ around it. E.g. \*text\* looks like *text*
+ * you can make text bold by putting \*\*  it. E.g. \*\*text\*\* looks like **text**
+ * if you want to resemble code you need to put \` around it. E.g. \`codetext\` looks like `codetext`
+  * Sections are introduced by using \#.
+  * Lists can be done with using a space and either \*, \-, or \+ and then again a space.
+  
+Additionally, you need the package `knitr` to compile or "knit" a Markdown File to an output format. In RStudio you can then chose if you want a PDF, HTML or Word Document.
+
+Code chunks also allow for options. Code Chunks are introduced by \`\`\` and also closed like this. After the opening, we need to specify which type of programming language we want to insert (`r`) and then we e.g. can specify if we want to `echo` our code (`TRUE`) or whether we want to omit it (`FALSE`). Other options are e.g. `eval`, which indicates whether we want to evaluate the code in the chunk below or whether we just want to skip it (`eval=FALSE`).
 
 
 # Git and assignment
