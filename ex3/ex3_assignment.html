@@ -12,7 +12,7 @@
 
 <meta name="author" content="Philipp Kling" />
 
-<meta name="date" content="2020-06-14" />
+<meta name="date" content="2020-06-15" />
 
 <title>Exercise 3: Assignment</title>
 
@@ -1672,7 +1672,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Exercise 3: Assignment</h1>
 <h4 class="author">Philipp Kling</h4>
-<h4 class="date">2020-06-14</h4>
+<h4 class="date">2020-06-15</h4>
 
 </div>
 
@@ -1734,42 +1734,50 @@ div.tocify {
 </div>
 <div id="assignment-1-subsetting-and-alterations-with-dplyr" class="section level1">
 <h1>Assignment 1: Subsetting and alterations with dplyr</h1>
-<div id="use-dplyr-to-create-a-variable-caught_up-that-only-consists-of-values-that-are-true-or-false-and-which-indicates-whether-a-flight-caught-up-with-a-departure-delay.-i.e.-it-should-be-true-if-the-delay-at-arrival-was-less-than-the-delay-of-the-departure-and-false-otherwise." class="section level3">
-<h3>1. Use dplyr to create a variable ‘caught_up’ that only consists of values that are TRUE or FALSE and which indicates whether a flight <em>caught up</em> with a departure delay. I.e. it should be TRUE if the delay at arrival was less than the delay of the departure and FALSE otherwise.</h3>
+<div id="a-create-a-new-variable" class="section level3">
+<h3>(a) Create a new variable</h3>
+<p>Use dplyr to create a variable ‘caught_up’ that only consists of values that are TRUE or FALSE and which indicates whether a flight <em>caught up</em> with a departure delay. I.e. it should be TRUE if the delay at arrival was less than the delay of the departure and FALSE otherwise.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">solution &lt;-<span class="st"> &quot;&quot;</span></a></code></pre></div>
 </div>
-<div id="use-dplyr-to-filter-the-dataset-to-include-only-flights-that-had-a-delayed-departure.-report-which-percentage-of-the-flights-had-a-delayed-departure.-how-many-of-those-delayed-flights-also-had-a-delayed-arrival" class="section level3">
-<h3>2. Use dplyr to filter the dataset to include only flights that had a delayed departure. Report which percentage of the flights had a delayed departure. How many of those delayed flights also had a delayed arrival?</h3>
+<div id="b-extraction-of-observations" class="section level3">
+<h3>(b) Extraction of observations</h3>
+<p>Use dplyr to filter the dataset to include only flights that had a delayed departure. Report which percentage of all the flights had a delayed departure. How many of those delayed flights also had a delayed arrival?</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">library</span>(dplyr)</a>
 <a class="sourceLine" id="cb10-2" data-line-number="2">solution &lt;-<span class="st"> &quot;&quot;</span></a></code></pre></div>
 </div>
 </div>
 <div id="assignment-2-summary-statistics" class="section level1">
 <h1>Assignment 2: Summary statistics</h1>
-<div id="do-flights-from-jfk-have-a-greater-departure-delay-than-flights-from-ewr-on-average-use-dplyr-to-find-out." class="section level3">
-<h3>1. Do flights from JFK have a greater departure delay than flights from EWR on average? Use dplyr to find out.</h3>
+<div id="a-summary-statistics-1" class="section level3">
+<h3>(a) Summary statistics 1</h3>
+<p>Do flights from JFK have a greater departure delay than flights from EWR on average? Use dplyr to find out.</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw">library</span>(dplyr)</a>
 <a class="sourceLine" id="cb11-2" data-line-number="2">solution &lt;-<span class="st"> &quot;&quot;</span></a></code></pre></div>
 </div>
-<div id="which-airport-is-the-most-common-to-get-to-chicago-ohare-international-airport-ord-use-dplyr-to-find-out." class="section level3">
-<h3>2. Which airport is the most common to get to Chicago O’Hare International Airport (ORD)? Use dplyr to find out.</h3>
+<div id="b-summary-statistics-2" class="section level3">
+<h3>(b) Summary statistics 2</h3>
+<p>Which airport is the most common to get to Chicago O’Hare International Airport (ORD)? Use dplyr to find out.</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">library</span>(dplyr)</a>
 <a class="sourceLine" id="cb12-2" data-line-number="2">solution &lt;-<span class="st"> &quot;&quot;</span></a></code></pre></div>
 </div>
 </div>
 <div id="assignment-3-rewriting" class="section level1">
 <h1>Assignment 3: Rewriting</h1>
-<div id="rewrite-the-following-statement-with-a-pipe-operator-." class="section level3">
-<h3>1. Rewrite the following statement with a pipe operator (%&gt;%).</h3>
+<div id="piping" class="section level3">
+<h3>Piping</h3>
+<p>Rewrite the following statement with a pipe operator (%&gt;%).</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw">library</span>(dplyr)</a>
 <a class="sourceLine" id="cb13-2" data-line-number="2"><span class="kw">sum</span>(<span class="kw">select</span>(<span class="kw">sample_n</span>(<span class="kw">filter</span>(flights, origin <span class="op">==</span><span class="st"> &quot;JFK&quot;</span>, dest <span class="op">==</span><span class="st"> &quot;PHX&quot;</span>), <span class="dv">200</span>), air_time), </a>
 <a class="sourceLine" id="cb13-3" data-line-number="3">    <span class="dt">na.rm =</span> T)</a></code></pre></div>
-<pre><code>[1] 57698</code></pre>
+<pre><code>[1] 58022</code></pre>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1">solution &lt;-<span class="st"> &quot;&quot;</span></a></code></pre></div>
 </div>
-<div id="rewrite-the-following-statement-with-dplyr-and-in-data.table-format." class="section level3">
-<h3>2. Rewrite the following statement with dplyr and in data.table format.</h3>
-<p>“Average departure delay for every flight to Phoenix (PHX) differentiated by carrier and airport of origin.”</p>
+<div id="dplyr-and-data.table" class="section level3">
+<h3>dplyr and data.table</h3>
+<p>Rewrite the following statement with dplyr and in data.table format.</p>
+<ul>
+<li>“Average departure delay for every flight to Phoenix (PHX) differentiated by carrier and airport of origin.”</li>
+</ul>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw">library</span>(dplyr)</a>
 <a class="sourceLine" id="cb16-2" data-line-number="2"><span class="kw">library</span>(data.table)</a>
 <a class="sourceLine" id="cb16-3" data-line-number="3"></a>

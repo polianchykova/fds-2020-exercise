@@ -45,6 +45,12 @@ Visit the Wikipedia page for the winners of the Eurovision Song Contest since 19
 
 **Assignment:** write a script that visits the webpage of the login page of Twitter and tries to log in with the provided credentials.
 
+Optionally: if you are not able to get a RSelenium webdriver to work, at least provide the XPath to the following elements of the website:
+
+ * field where you insert your username
+ * field where you insert your password
+ * login button
+
 ```{r,echo=T}
 url <- "https://www.twitter.com/login"
 username <- "testusername"
